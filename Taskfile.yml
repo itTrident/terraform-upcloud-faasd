@@ -1,0 +1,54 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  DEBUG: debug
+
+tasks:
+  setup:
+    desc: configures your tfvars file
+    summary: |
+      Generates a .tfvars file for you to complete.
+    cmds: 
+      - "cp terraform.tfvars.example terraform.tfvars"
+      - echo "Generated a template terraform.tfvars for you. Fill this in!"
+    sources:
+      - terraform.tfvars.example
+    generates:
+      - terraform.tfvars
+    silent: true
+
+  init:
+    desc: Init your Terraform env
+    cmds:
+      - TF_LOG={{.DEBUG}} terraform init
+
+  plan:
+    desc: Create a Terraform plan
+    cmds:
+      - task: init
+      - TF_LOG={{.DEBUG}} terraform plan 
+    silent: true
+
+  apply:
+    desc: Apply a Terraform plan
+    cmds:
+      - task: init
+      - task: plan
+      - TF_LOG={{.DEBUG}} terraform apply 
+
+  destroy:
+    desc: Destroy your Terraformed world
+    cmds:
+      - terraform destroy
+
+  login:
+    desc: Log in to your faasd appliance
+    cmds:
+      - ssh {{.USER_NAME}}@{{.IP}}
+    vars:
+      USER_NAME:
+        sh: terraform output faasd_server_username
+      IP:
+        sh: terraform output faasd_server_ip
