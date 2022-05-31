@@ -64,7 +64,7 @@ Once your variables are in place we are ready to perform terraform plan using be
 ```
 task apply
 ```
-## Login to the fassd instance
+## Login to the faasd instance
 
 Run below command to access your instance via SSH.
 
